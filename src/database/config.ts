@@ -1,6 +1,8 @@
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import { Sequelize } from 'sequelize-typescript';
+import { SequelizeStorage, Umzug } from 'umzug';
+
 
 
 let env: any = null
@@ -29,3 +31,14 @@ export const DB = new Sequelize(
     timezone: '+07:00',
   },
 )
+
+export const migrator = new Umzug({
+  migrations: {
+    glob: ['migrations/*.ts', { cwd: __dirname }],
+  },
+  context: DB.getQueryInterface(),
+  storage: new SequelizeStorage({
+    sequelize: DB,
+  }),
+  logger: console,
+});

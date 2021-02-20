@@ -33,7 +33,8 @@
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.3",
     "sequelize": "^6.5.0",
-    "sequelize-typescript": "^2.1.0"
+    "sequelize-typescript": "^2.1.0",
+    "umzug": "^3.0.0-beta.15"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.5.1",
