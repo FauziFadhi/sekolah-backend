@@ -1,0 +1,4 @@
+enum ERROR_CODE {
+  // 400
+  VALIDATION = 'V01'
+}
