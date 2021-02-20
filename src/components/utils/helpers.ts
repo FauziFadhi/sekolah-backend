@@ -1,4 +1,5 @@
 import { UnprocessableEntityException } from '@nestjs/common';
+import { DB } from 'database/config';
 import { snakeCase } from 'lodash';
 import * as moment from 'moment';
 
@@ -52,7 +53,7 @@ export const queryPaginationSort = (querySort: string, callback?: (field: string
     const fieldCallback = callback(orderBy)
 
     if (typeof fieldCallback == 'string' && fieldCallback?.includes('.')) {
-      const db: any = DB()
+      const db: any = DB
       const [table, attribute] = fieldCallback.split('.')
       return [db.literal(`${table}.${snakeCase(attribute)}`), orderFlow]
     }
