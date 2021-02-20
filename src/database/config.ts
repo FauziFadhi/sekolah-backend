@@ -36,9 +36,17 @@ export const migrator = new Umzug({
   migrations: {
     glob: ['migrations/*.ts', { cwd: __dirname }],
   },
+  create: {
+    folder: `${__dirname}/migrations`,
+    template: filepath => [
+      [filepath, fs.readFileSync(`${__dirname}/migration-template.ts`).toString()],
+    ]
+  },
   context: DB.getQueryInterface(),
   storage: new SequelizeStorage({
     sequelize: DB,
   }),
   logger: console,
 });
+
+export type Migration = typeof migrator._types.migration;
