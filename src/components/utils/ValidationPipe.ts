@@ -1,3 +1,4 @@
+import { ERROR_CODE } from '@constants/error-code';
 import { ArgumentMetadata, flatten, Injectable, PipeTransform, UnprocessableEntityException } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';

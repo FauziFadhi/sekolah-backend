@@ -22,8 +22,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const errorCode = (exception as any)?.response?.error || undefined
     const errorMessage: any = (exception as any)?.response?.message || (exception as any)?.response || exception?.message || exception
 
-    console.log(exception);
-    console.log(stack)
+    console.log(stack);
 
     let errorDefault: any = {
       status,

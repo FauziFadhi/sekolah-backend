@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AllExceptionsFilter } from 'components/utils/all-exception-filter';
 import { ValidationPipe } from 'components/utils/ValidationPipe';
 import { DB } from 'database/config';
+import { install } from 'source-map-support';
 
 import { AppModule } from './app.module';
 
@@ -9,6 +10,8 @@ async function bootstrap() {
   DB.addModels([`${__dirname}/models`])
 
   const app = await NestFactory.create(AppModule);
+  install();
+
 
   // const app = await NestFactory.create<NestExpressApplication>(AppModule);
 

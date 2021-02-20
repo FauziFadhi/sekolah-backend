@@ -14,7 +14,8 @@
     "paths": {
       "@models/*": ["./models/*"],
       "@constants/*": ["./components/constants/*"],
-      "@utils/*": ["./components/utils/*"]
+      "@utils/*": ["./components/utils/*"],
+      "@auth/*": ["./modules/auth/*"]
     }
   }
 }

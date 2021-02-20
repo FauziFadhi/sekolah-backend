@@ -1,4 +1,5 @@
-enum ERROR_CODE {
+export enum ERROR_CODE {
   // 400
-  VALIDATION = 'V01'
+  VALIDATION = 'V01',
+  ROLE_NOT_IMPLEMENTED = 'R01'
 }
