@@ -1,6 +1,8 @@
 import { GENDER, IUnfilledAtt, RELIGION, TUnfilledAtt } from '@constants/app';
-import { NotFoundException } from '@nestjs/common';
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { ERROR_CODE } from '@constants/error-code';
+import { BadRequestException } from '@nestjs/common';
+import { BaseModel } from 'components/base/base.model';
+import { BeforeCreate, BeforeUpdate, Column, DataType, Table } from 'sequelize-typescript';
 import { FindOptions } from 'sequelize/types';
 
 export interface IStudentAttr extends IUnfilledAtt {
@@ -8,6 +10,7 @@ export interface IStudentAttr extends IUnfilledAtt {
   name: string
   nipd: string
   gender: GENDER
+  email: string
   nisn: string
   birthPlace: string
   birthDate: Date
@@ -22,11 +25,12 @@ export interface IStudentCreateAttr extends Omit<IStudentAttr, 'id' | TUnfilledA
   tableName: 'student',
   indexes: [
     { fields: ['is_deleted', 'name'] },
-    { fields: ['is_deleted', 'nisn'] }
-  ]
+    { fields: ['is_deleted', 'email'] },
+    { fields: ['is_deleted', 'nisn'] },
+  ],
 })
 
-export class Student extends Model<IStudentAttr, IStudentCreateAttr> implements IStudentAttr {
+export class Student extends BaseModel<IStudentAttr, IStudentCreateAttr> implements IStudentAttr {
 
   @Column
   name: string;
@@ -41,6 +45,9 @@ export class Student extends Model<IStudentAttr, IStudentCreateAttr> implements 
   nisn: string;
 
   @Column
+  email: string;
+
+  @Column
   birthPlace: string;
 
   @Column
@@ -52,26 +59,47 @@ export class Student extends Model<IStudentAttr, IStudentCreateAttr> implements 
   @Column
   userLoginId: number;
 
-  @Column
-  createdAt: Date;
-
-  @Column
-  updatedAt: Date;
-
-  @Column
-  isDeleted: boolean;
-
   static async findByUserLogin(userLoginId: number, options?: FindOptions & { isThrow?: boolean }) {
-    const data = await Student.findOne({
+    return await Student.find({
       ...options,
       where: {
         userLoginId,
         ...options.where,
-      }
+      },
     })
+  }
 
-    if (!data && options.isThrow) throw new NotFoundException()
+  /**
+   * hook for checking duplicate email and throw it immediately before create and update to database
+   * @param model {UserLogin}
+   * @param options {CreateOptions}
+   */
+  @BeforeCreate
+  @BeforeUpdate
+  static async checkDuplicateEmail(model: Student, options) {
+    let isExistsEmail = undefined
+    if (model.id)
+      isExistsEmail = await this.find({
+        lock: options?.transaction.LOCK.SHARE,
+        where: {
+          isDeleted: false,
+          email: model.email,
+          id: {
+            ne: model.id,
+          },
+        },
+      })
+    else
+      isExistsEmail = await Student.find({
+        lock: options?.transaction.LOCK.SHARE,
+        where: {
+          isDeleted: false,
+          email: model.email,
+        },
+      })
 
-    return data
+    if (isExistsEmail) throw new BadRequestException('email has been used', ERROR_CODE.VALIDATION)
+
+    return model
   }
 }

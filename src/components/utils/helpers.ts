@@ -1,3 +1,4 @@
+import { ERROR_CODE } from '@constants/error-code';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { DB } from 'database/config';
 import { snakeCase } from 'lodash';
@@ -62,3 +63,5 @@ export const queryPaginationSort = (querySort: string, callback?: (field: string
   })
   return orders
 }
+
+export const circularToJSON = circular => JSON.parse(JSON.stringify(circular))

@@ -1,6 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-
-import { queryPaginationSort } from './utils/helpers';
+import { queryPaginationSort } from '@utils/helpers';
 
 export const Page = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
@@ -9,8 +8,8 @@ export const Page = createParamDecorator(
     const limit = +query.size ?? undefined
 
     return {
-      offset: query.offset,
-      limit,
+      offset: (query.size * query.page) - +query.size ?? undefined,
+      limit: limit || undefined,
       orders: queryPaginationSort(query.sort, field => (field)) || [],
     }
   },

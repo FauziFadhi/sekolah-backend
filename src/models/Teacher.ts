@@ -23,7 +23,7 @@ export interface ITeacherCreateAttr extends Omit<ITeacherAttr, 'id' | TUnfilledA
   ]
 })
 
-export class Teacher extends Model<ITeacherAttr, ITeacherCreateAttr> implements ITeacherAttr {
+export class Teacher extends Model<ITeacherAttr, ITeacherCreateAttr> {
 
   @Column
   name: string;
@@ -52,12 +52,8 @@ export class Teacher extends Model<ITeacherAttr, ITeacherCreateAttr> implements 
   @Column
   userLoginId: number;
 
-  @Column
-  createdAt: Date;
+  static async gg(): Promise<Teacher> {
+    return Teacher.findOne()
+  }
 
-  @Column
-  updatedAt: Date;
-
-  @Column
-  isDeleted: boolean;
 }

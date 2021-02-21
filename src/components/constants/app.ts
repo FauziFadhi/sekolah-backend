@@ -34,7 +34,7 @@ export interface IUnfilledAtt {
   updatedAt?: Date
   isDeleted?: boolean
 }
-export type TUnfilledAtt = 'createdAt' | 'UpdatedAt' | 'isDeleted'
+export type TUnfilledAtt = 'createdAt' | 'updatedAt' | 'isDeleted'
 
 export const AUTH_PAYLOAD_ALGORITHM = 'aes-192-cbc';
 export const AUTH_PAYLOAD_PASSWORD = 'wtkwX1ywsnB'
