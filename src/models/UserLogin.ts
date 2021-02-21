@@ -2,8 +2,7 @@ import { IUnfilledAtt, TUnfilledAtt, UserRole } from '@constants/app';
 import { ERROR_CODE } from '@constants/error-code';
 import { BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { BaseModel } from 'components/base/base.model';
-import { BeforeCreate, BeforeUpdate, Column, DataType, Table } from 'sequelize-typescript';
+import { BeforeCreate, BeforeUpdate, Column, DataType, Model, Table } from 'sequelize-typescript';
 import { CreateOptions } from 'sequelize/types';
 
 export interface IUserLoginAttr extends IUnfilledAtt {
@@ -23,7 +22,7 @@ export interface IUserLoginCreateAttr extends Omit<IUserLoginAttr, 'id' | TUnfil
   ],
 })
 
-export class UserLogin extends BaseModel<IUserLoginAttr, IUserLoginCreateAttr> implements IUserLoginAttr {
+export class UserLogin extends Model<IUserLoginAttr, IUserLoginCreateAttr> implements IUserLoginAttr {
 
   @Column
   username: string;
@@ -55,7 +54,7 @@ export class UserLogin extends BaseModel<IUserLoginAttr, IUserLoginCreateAttr> i
         },
       })
     else
-      isExistsUsername = await this.find({
+      isExistsUsername = await this.findOne({
         lock: options?.transaction.LOCK.SHARE,
         where: {
           isDeleted: false,

@@ -1,45 +1,32 @@
 import { NotFoundException } from '@nestjs/common';
-import { Column, Model } from 'sequelize-typescript';
+import { Model } from 'sequelize-typescript';
 import { FindOptions } from 'sequelize/types';
 
-export type ModelStatic<M> = typeof BaseModel & M;
+export function baseModel<T1, T2>() {
+  return class BaseModel extends Model<T1, T2> {
 
-export class BaseModel<TModelAttributes extends {} = any, TCreationAttributes extends {} = TModelAttributes> extends Model<TModelAttributes, TCreationAttributes> {
+    static async find<T extends Model>(this: { new(): T } & typeof BaseModel, options?: FindOptions & { isThrow?: boolean }): Promise<T> {
+      const data = await this.findOne(options)
 
-  @Column
-  createdAt: Date;
+      this.throw(data, options?.isThrow)
 
-  @Column
-  updatedAt: Date;
+      return data as any
+    }
 
-  @Column
-  isDeleted: boolean;
+    static throw(data: any, isThrow: boolean) {
+      const isDataExist = data
+      const isDataDeleted = data && data.isDeleted
+      if ((!isDataExist || isDataDeleted) && isThrow) throw new NotFoundException()
+    }
 
-  constructor() {
-    super()
-  }
-
-  static async find<T>(this: ModelStatic<T>, options?: FindOptions & { isThrow?: boolean }): Promise<T> {
-    const data = await this.findOne()
-
-    BaseModel.throw(data, options?.isThrow)
-
-    return data as any
-  }
-
-  private static throw(data: any, isThrow: boolean) {
-    const isDataExist = data
-    const isDataDeleted = data && data.isDeleted
-    if ((!isDataExist || isDataDeleted) && isThrow) throw new NotFoundException()
-  }
-
-  static async findById<T extends BaseModel>(this: ModelStatic<T>, id: number, options?: FindOptions & { isThrow?: boolean }): Promise<T> {
-    return await BaseModel.find({
-      ...options,
-      where: {
-        ...options.where,
-        id,
-      },
-    }) as any
+    static async findById<T extends Model>(this: { new(): T } & typeof BaseModel, id: number, options?: FindOptions & { isThrow?: boolean }): Promise<T> {
+      return await this.find({
+        ...options,
+        where: {
+          ...options.where,
+          id,
+        },
+      }) as any
+    }
   }
 }

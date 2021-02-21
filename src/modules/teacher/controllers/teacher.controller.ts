@@ -40,8 +40,7 @@ export class TeacherController {
     a.id
     const b = await Student.findOne()
     b.id
-    const c = await Student.find()
-    c.
+    // const c = await Student.find()
   }
 
   @Post()

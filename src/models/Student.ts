@@ -1,7 +1,7 @@
 import { GENDER, IUnfilledAtt, RELIGION, TUnfilledAtt } from '@constants/app';
 import { ERROR_CODE } from '@constants/error-code';
 import { BadRequestException } from '@nestjs/common';
-import { BaseModel } from 'components/base/base.model';
+import { baseModel } from 'components/base/base.model';
 import { BeforeCreate, BeforeUpdate, Column, DataType, Table } from 'sequelize-typescript';
 import { FindOptions } from 'sequelize/types';
 
@@ -29,8 +29,7 @@ export interface IStudentCreateAttr extends Omit<IStudentAttr, 'id' | TUnfilledA
     { fields: ['is_deleted', 'nisn'] },
   ],
 })
-
-export class Student extends BaseModel<IStudentAttr, IStudentCreateAttr> implements IStudentAttr {
+export class Student extends baseModel<IStudentAttr, IStudentCreateAttr>() {
 
   @Column
   name: string;
@@ -58,6 +57,11 @@ export class Student extends BaseModel<IStudentAttr, IStudentCreateAttr> impleme
 
   @Column
   userLoginId: number;
+
+  @Column
+  isDeleted: boolean;
+
+
 
   static async findByUserLogin(userLoginId: number, options?: FindOptions & { isThrow?: boolean }) {
     return await Student.find({
