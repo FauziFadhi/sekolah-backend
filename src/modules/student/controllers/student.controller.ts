@@ -45,12 +45,10 @@ export class StudentController {
 
   @Get(':id')
   async getOne(@Param('id') id: number, @LoggedUser() loggedUser) {
-    console.log(id);
     const a = await Student.findById(id, {
       isThrow: true,
     })
 
-    console.log('asd', a);
     return a
   }
 

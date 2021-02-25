@@ -21,6 +21,7 @@ export interface IStudentAttr extends IUnfilledAtt {
 export interface IStudentCreateAttr extends Omit<IStudentAttr, 'id' | TUnfilledAtt> {
 }
 
+// @InvalidateHook
 @Table({
   tableName: 'student',
   indexes: [
@@ -62,7 +63,6 @@ export class Student extends baseModel<IStudentAttr, IStudentCreateAttr>() {
   isDeleted: boolean;
 
 
-
   static async findByUserLogin(userLoginId: number, options?: FindOptions & { isThrow?: boolean }) {
     return await Student.find({
       ...options,
@@ -81,7 +81,7 @@ export class Student extends baseModel<IStudentAttr, IStudentCreateAttr>() {
   @BeforeCreate
   @BeforeUpdate
   static async checkDuplicateEmail(model: Student, options) {
-    let isExistsEmail = undefined
+    let isExistsEmail: Student = undefined
     if (model.id)
       isExistsEmail = await this.find({
         lock: options?.transaction.LOCK.SHARE,
