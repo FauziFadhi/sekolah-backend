@@ -68,11 +68,7 @@ export class StudentController {
 
   @Delete(':id')
   @HttpCode(204)
-  async delete(@Body() body: any, @Param('id') id: number, @LoggedUser() loggedUser) {
-    const student = await Student.findById(id, {
-      isThrow: true,
-    })
-
-    return student.update({ isDeleted: true })
+  async delete(@Param('id') id: number, @LoggedUser() loggedUser) {
+    return await this.studentService.delete(id)
   }
 }

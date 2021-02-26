@@ -75,7 +75,7 @@ export class Student extends baseModel<IStudentAttr, IStudentCreateAttr>() {
 
   /**
    * hook for checking duplicate email and throw it immediately before create and update to database
-   * @param model {UserLogin}
+   * @param model {Student}
    * @param options {CreateOptions}
    */
   @BeforeCreate

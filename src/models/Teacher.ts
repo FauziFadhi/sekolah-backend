@@ -1,5 +1,8 @@
 import { GENDER, IUnfilledAtt, PTK_TYPE, RELIGION, TUnfilledAtt } from '@constants/app';
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { ERROR_CODE } from '@constants/error-code';
+import { BadRequestException } from '@nestjs/common';
+import { baseModel } from 'components/base/base.model';
+import { BeforeCreate, BeforeUpdate, Column, DataType, Table } from 'sequelize-typescript';
 
 export interface ITeacherAttr extends IUnfilledAtt {
   id?: number
@@ -7,6 +10,7 @@ export interface ITeacherAttr extends IUnfilledAtt {
   nuptk: string
   gender: GENDER
   birthPlace: string
+  email: string
   birthDate: Date
   ptkType: PTK_TYPE
   religion: RELIGION
@@ -23,7 +27,7 @@ export interface ITeacherCreateAttr extends Omit<ITeacherAttr, 'id' | TUnfilledA
   ]
 })
 
-export class Teacher extends Model<ITeacherAttr, ITeacherCreateAttr> {
+export class Teacher extends baseModel<ITeacherAttr, ITeacherCreateAttr>() implements ITeacherAttr {
 
   @Column
   name: string;
@@ -36,6 +40,10 @@ export class Teacher extends Model<ITeacherAttr, ITeacherCreateAttr> {
 
   @Column
   ptkType: PTK_TYPE;
+
+  @Column
+  email: string;
+
 
   @Column
   nuptk: string;
@@ -52,8 +60,37 @@ export class Teacher extends Model<ITeacherAttr, ITeacherCreateAttr> {
   @Column
   userLoginId: number;
 
-  static async gg(): Promise<Teacher> {
-    return Teacher.findOne()
-  }
+  /**
+   * hook for checking duplicate email and throw it immediately before create and update to database
+   * @param model {Teacher}
+   * @param options {CreateOptions}
+   */
+  @BeforeCreate
+  @BeforeUpdate
+  static async checkDuplicateEmail(model: Teacher, options) {
+    let isExistsEmail: Teacher = undefined
+    if (model.id)
+      isExistsEmail = await this.find({
+        lock: options?.transaction.LOCK.SHARE,
+        where: {
+          isDeleted: false,
+          email: model.email,
+          id: {
+            ne: model.id,
+          },
+        },
+      })
+    else
+      isExistsEmail = await Teacher.find({
+        lock: options?.transaction.LOCK.SHARE,
+        where: {
+          isDeleted: false,
+          email: model.email,
+        },
+      })
 
+    if (isExistsEmail) throw new BadRequestException('email has been used', ERROR_CODE.VALIDATION)
+
+    return model
+  }
 }
