@@ -4,17 +4,22 @@ import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query } from
 import { queryPaginationSort } from '@utils/helpers';
 import { LoggedUser } from 'components/decorator/logged-user.decorator';
 import { Page } from 'components/decorator/page.decorator';
-import { FindOptions, WhereOptions } from 'sequelize/types';
+import { Sequelize } from 'sequelize-typescript';
+import { FindOptions, Op, WhereOptions } from 'sequelize/types';
+
+import { TeacherQuery } from '../request/find.query';
 
 // @UseGuards(AuthGuard('uauth'))
 @Controller('v1/teacher')
 export class TeacherController {
 
   @Get()
-  async list(@Query() query, @Page() pagination) {
+  async list(@Query() query: TeacherQuery, @Page() pagination) {
 
     const whereOptions: WhereOptions = {
-
+      [Op.and]: [
+        Sequelize.literal(`lower(Teacher.name) like '%${query.search}%'`)
+      ],
     }
 
     const orders = queryPaginationSort(query.sort, field => field)

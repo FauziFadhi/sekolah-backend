@@ -5,7 +5,8 @@ import { ResponsePaginationInterceptor } from '@utils/pagination.iterceptor';
 import { BaseResource } from 'components/base/base.resource';
 import { LoggedUser } from 'components/decorator/logged-user.decorator';
 import { Page } from 'components/decorator/page.decorator';
-import { FindOptions, WhereOptions } from 'sequelize/types';
+import { Sequelize } from 'sequelize-typescript';
+import { FindOptions, Op, WhereOptions } from 'sequelize/types';
 
 import { StudentService } from '../bll/student.service';
 
@@ -21,9 +22,12 @@ export class StudentController {
 
   @Get()
   @UseInterceptors(new ResponsePaginationInterceptor(BaseResource, 'student'))
-  async list(@Query() query, @Page() pagination) {
-    const whereOptions: WhereOptions = {
+  async list(@Query() query: any, @Page() pagination) {
 
+    const whereOptions: WhereOptions = {
+      [Op.and]: [
+        Sequelize.literal(`lower(Student.name) like '%${query.search}%'`)
+      ],
     }
 
     const orders = queryPaginationSort(query.sort, field => field)
