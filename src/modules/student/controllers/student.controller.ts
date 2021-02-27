@@ -5,10 +5,13 @@ import { ResponsePaginationInterceptor } from '@utils/pagination.iterceptor';
 import { BaseResource } from 'components/base/base.resource';
 import { LoggedUser } from 'components/decorator/logged-user.decorator';
 import { Page } from 'components/decorator/page.decorator';
-import { Sequelize } from 'sequelize-typescript';
-import { FindOptions, Op, WhereOptions } from 'sequelize/types';
+import { DB, Op, seq } from 'database/config';
+import { isUndefined, omitBy } from 'lodash';
+import { FindOptions, WhereOptions } from 'sequelize/types';
 
 import { StudentService } from '../bll/student.service';
+import { StudentListFilter } from '../filters/student-list.filter';
+import { StudentCreateRequest } from '../requests/student.request';
 
 // @UseGuards(AuthGuard('uauth'))
 @Controller('v1/student')
@@ -22,12 +25,14 @@ export class StudentController {
 
   @Get()
   @UseInterceptors(new ResponsePaginationInterceptor(BaseResource, 'student'))
-  async list(@Query() query: any, @Page() pagination) {
+  async list(@Query() query: any, @Page() pagination, @StudentListFilter() filter) {
 
+    console.log(filter);
+    const db = DB as any
     const whereOptions: WhereOptions = {
-      [Op.and]: [
-        Sequelize.literal(`lower(Student.name) like '%${query.search}%'`)
-      ],
+      [Op.or]: query.search && [
+        seq.where(seq.fn('lower', seq.col('Student.name')), { [Op.like]: `%${query.search}%` }),
+      ] || undefined
     }
 
     const orders = queryPaginationSort(query.sort, field => field)
@@ -36,7 +41,7 @@ export class StudentController {
       ...pagination,
       where: {
         isDeleted: false,
-        ...whereOptions,
+        ...omitBy(whereOptions, isUndefined),
       },
       order: [
         ...orders,
@@ -57,7 +62,7 @@ export class StudentController {
   }
 
   @Post()
-  async create(@Body() body: any) {
+  async create(@Body() body: StudentCreateRequest) {
     return await this.studentService.create(body)
   }
 

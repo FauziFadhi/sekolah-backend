@@ -30,7 +30,7 @@ export interface IStudentCreateAttr extends Omit<IStudentAttr, 'id' | TUnfilledA
     { fields: ['is_deleted', 'nisn'] },
   ],
 })
-export class Student extends baseModel<IStudentAttr, IStudentCreateAttr>() {
+export class Student extends baseModel<IStudentAttr, IStudentCreateAttr>() implements IStudentAttr {
 
   @Column
   name: string;
@@ -59,8 +59,8 @@ export class Student extends baseModel<IStudentAttr, IStudentCreateAttr>() {
   @Column
   userLoginId: number;
 
-  @Column
-  isDeleted: boolean;
+  @Column({ defaultValue: 0 })
+  isDeleted: boolean
 
 
   static async findByUserLogin(userLoginId: number, options?: FindOptions & { isThrow?: boolean }) {
@@ -84,7 +84,7 @@ export class Student extends baseModel<IStudentAttr, IStudentCreateAttr>() {
     let isExistsEmail: Student = undefined
     if (model.id)
       isExistsEmail = await this.find({
-        lock: options?.transaction.LOCK.SHARE,
+        lock: options?.transaction?.LOCK.SHARE,
         where: {
           isDeleted: false,
           email: model.email,
@@ -95,7 +95,7 @@ export class Student extends baseModel<IStudentAttr, IStudentCreateAttr>() {
       })
     else
       isExistsEmail = await Student.find({
-        lock: options?.transaction.LOCK.SHARE,
+        lock: options?.transaction?.LOCK.SHARE,
         where: {
           isDeleted: false,
           email: model.email,

@@ -50,9 +50,6 @@ export class ResponsePaginationInterceptor<T> implements NestInterceptor<T, any>
     const request = context.switchToHttp().getRequest()
     this.query = request.query
 
-    const offset = (this.query.size * this.query.page) - +this.query.size ?? 0
-    this.query['offset'] = offset
-
     return next.handle().pipe(map((resp) => {
       const { count, rows, ...additionalMeta } = circularToJSON(resp)
 

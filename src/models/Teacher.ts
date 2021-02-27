@@ -44,7 +44,6 @@ export class Teacher extends baseModel<ITeacherAttr, ITeacherCreateAttr>() imple
   @Column
   email: string;
 
-
   @Column
   nuptk: string;
 
@@ -60,6 +59,9 @@ export class Teacher extends baseModel<ITeacherAttr, ITeacherCreateAttr>() imple
   @Column
   userLoginId: number;
 
+  @Column({ defaultValue: 0 })
+  isDeleted: boolean
+
   /**
    * hook for checking duplicate email and throw it immediately before create and update to database
    * @param model {Teacher}
@@ -71,7 +73,7 @@ export class Teacher extends baseModel<ITeacherAttr, ITeacherCreateAttr>() imple
     let isExistsEmail: Teacher = undefined
     if (model.id)
       isExistsEmail = await this.find({
-        lock: options?.transaction.LOCK.SHARE,
+        lock: options?.transaction?.LOCK.SHARE,
         where: {
           isDeleted: false,
           email: model.email,
@@ -82,7 +84,7 @@ export class Teacher extends baseModel<ITeacherAttr, ITeacherCreateAttr>() imple
       })
     else
       isExistsEmail = await Teacher.find({
-        lock: options?.transaction.LOCK.SHARE,
+        lock: options?.transaction?.LOCK.SHARE,
         where: {
           isDeleted: false,
           email: model.email,

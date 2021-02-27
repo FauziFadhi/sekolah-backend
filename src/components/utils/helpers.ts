@@ -1,7 +1,7 @@
 import { ERROR_CODE } from '@constants/error-code';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { DB } from 'database/config';
-import { snakeCase } from 'lodash';
+import { isUndefined, omitBy, snakeCase } from 'lodash';
 import * as moment from 'moment';
 
 /**
@@ -65,3 +65,5 @@ export const queryPaginationSort = (querySort: string, callback?: (field: string
 }
 
 export const circularToJSON = circular => JSON.parse(JSON.stringify(circular))
+
+export const omitUndefined = (obj: Object) => omitBy(obj, isUndefined)

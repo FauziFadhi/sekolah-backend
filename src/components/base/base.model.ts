@@ -1,6 +1,6 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { Model as SequelizeModel, ModelOptions } from 'sequelize';
-import { Model } from 'sequelize-typescript';
+import { DataType, Model } from 'sequelize-typescript';
 import { FindOptions } from 'sequelize/types';
 import { ModelHooks } from 'sequelize/types/lib/hooks';
 
@@ -10,6 +10,7 @@ export interface IBaseModel {
 
 export function baseModel<T1, T2>() {
   return class BaseModel extends Model<T1, T2> implements IBaseModel {
+
 
     static async find<T extends Model>(this: { new(): T } & typeof BaseModel, options?: FindOptions & { isThrow?: boolean }): Promise<T> {
       const data = await this.findOne(options)
@@ -25,7 +26,8 @@ export function baseModel<T1, T2>() {
 
     static throw(data: any, isThrow: boolean) {
       const isDataExist = data
-      const isDataDeleted = data && data.isDeleted
+      const isDataDeleted = data && Boolean(data.isDeleted == true)
+
       if ((!isDataExist || isDataDeleted) && isThrow) throw new NotFoundException()
     }
 
@@ -45,7 +47,32 @@ export function InvalidateHook(arg?: any): void {
   invalidate(arg)
 }
 
+export function CrUpIs(arg?: any): void {
+  createCrUpIs(arg)
+}
+
+function createCrUpIs(target: typeof SequelizeModel): void {
+  let attribute = {}
+
+  attribute['isDeleted'] = DataType.BOOLEAN
+  Reflect.defineMetadata(ATTRIBUTES_KEY, {
+    ...attribute
+  }, target);
+  attribute = {}
+
+  Reflect.defineMetadata(ATTRIBUTES_KEY, {
+    updatedAt: DataType.DATE,
+  }, target);
+
+  Reflect.defineMetadata(ATTRIBUTES_KEY, {
+    createdAt: DataType.DATE,
+  }, target);
+}
+
 const OPTIONS_KEY = 'sequelize:options';
+const ATTRIBUTES_KEY = 'sequelize:attributes';
+
+
 
 function invalidate(target: typeof SequelizeModel) {
   const hooksOptions: Partial<ModelHooks<any>> = {
