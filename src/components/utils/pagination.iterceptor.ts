@@ -125,7 +125,7 @@ export class ResponsePaginationInterceptor<T> implements NestInterceptor<T, any>
     return total >= 0 && {
       total,
       current_total: rows?.length || 0,
-      total_page: totalPage,
+      total_page: totalPage || 0,
       current_page: +additionalMeta?.meta?.page || +this.query.page || 1,
       per_page: + this.query.size || 0,
       startOf: count && this.query['offset'] + 1 || 0 as Number,

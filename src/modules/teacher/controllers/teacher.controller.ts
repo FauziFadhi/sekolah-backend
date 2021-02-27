@@ -1,69 +1,57 @@
-import { Student } from '@models/Student';
 import { Teacher } from '@models/Teacher';
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query } from '@nestjs/common';
-import { queryPaginationSort } from '@utils/helpers';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UseInterceptors } from '@nestjs/common';
+import { generateViewModel } from '@utils/helpers';
+import { ResponsePaginationInterceptor } from '@utils/pagination.iterceptor';
+import { BaseResource } from 'components/base/base.resource';
 import { LoggedUser } from 'components/decorator/logged-user.decorator';
-import { Page } from 'components/decorator/page.decorator';
-import { FindOptions, WhereOptions } from 'sequelize/types';
 
-import { TeacherQuery } from '../request/find.query';
+import { TeacherService } from '../bll/teacher.service';
+import { TeacherListFilter } from '../filters/teacher-list.filter';
+import { TeacherCreateRequest } from '../requests/teacher.request';
+import { TeacherViewModel } from '../viewmodel/teacher.viewmodel';
 
 // @UseGuards(AuthGuard('uauth'))
 @Controller('v1/teacher')
 export class TeacherController {
+  constructor(
+    private readonly teacherService: TeacherService,
+  ) {
+
+  }
 
   @Get()
-  async list(@Query() query: TeacherQuery, @Page() pagination) {
+  @UseInterceptors(new ResponsePaginationInterceptor(BaseResource, 'teacher'))
+  async list(@TeacherListFilter() filter) {
 
-    const whereOptions: WhereOptions = {
-      and: [
-        {
-          id: 1,
-        }
-      ],
-    }
+    const { rows, count } = await Teacher.findAndCountAll(filter)
 
-    const orders = queryPaginationSort(query.sort, field => field)
-
-    const findOptions: FindOptions = {
-      ...pagination,
-      where: {
-        isDeleted: false,
-        ...whereOptions,
-      },
-      order: [
-        ...orders,
-        ['id', 'desc'],
-      ],
-    }
-
-    return await Teacher.findAndCountAll(findOptions)
+    return { count, rows: generateViewModel(TeacherViewModel, rows) }
   }
 
   @Get(':id')
   async getOne(@Param('id') id: number, @LoggedUser() loggedUser) {
-    const a = await Teacher.findOne()
-    a.id
-    const b = await Student.findOne()
-    b.id
-    // const c = await Student.find()
+    const teacher = await Teacher.findById(id, {
+      isThrow: true
+    })
+
+    return generateViewModel(TeacherViewModel, teacher)
+
   }
 
   @Post()
-  async create(@Body() body: any) {
-    return await Teacher.create(body)
+  async create(@Body() body: TeacherCreateRequest) {
+    const teacher = await this.teacherService.create(body)
+
+    return generateViewModel(TeacherViewModel, teacher)
   }
 
   @Put(':id')
   async update(@Body() body: any, @Param('id') id: number, @LoggedUser() loggedUser) {
-    const teacher = await Teacher.findOne({
-      // isThrow: true,
-      where: {
-        id,
-      },
+    const teacher = await Teacher.findById(id, {
+      isThrow: true,
     })
 
-    return teacher.update(body)
+    return generateViewModel(TeacherViewModel, await teacher.update(body))
   }
 
   @Delete(':id')
