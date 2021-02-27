@@ -1,13 +1,14 @@
 import { Student } from '@models/Student';
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UseInterceptors } from '@nestjs/common';
+import { generateViewModel } from '@utils/helpers';
 import { ResponsePaginationInterceptor } from '@utils/pagination.iterceptor';
 import { BaseResource } from 'components/base/base.resource';
 import { LoggedUser } from 'components/decorator/logged-user.decorator';
-import { Page } from 'components/decorator/page.decorator';
 
 import { StudentService } from '../bll/student.service';
 import { StudentListFilter } from '../filters/student-list.filter';
 import { StudentCreateRequest } from '../requests/student.request';
+import { StudentViewModel } from '../viewmodel/student.viewmodel';
 
 // @UseGuards(AuthGuard('uauth'))
 @Controller('v1/student')
@@ -21,23 +22,26 @@ export class StudentController {
 
   @Get()
   @UseInterceptors(new ResponsePaginationInterceptor(BaseResource, 'student'))
-  async list(@Query() query: any, @Page() pagination, @StudentListFilter() filter) {
+  async list(@StudentListFilter() filter) {
 
-    return await Student.findAndCountAll(filter)
+    const { count, rows } = await Student.findAndCountAll(filter)
+    return { count, rows: generateViewModel(StudentViewModel, rows) }
   }
 
   @Get(':id')
   async getOne(@Param('id') id: number, @LoggedUser() loggedUser) {
-    const a = await Student.findById(id, {
+    const student = await Student.findById(id, {
       isThrow: true,
     })
 
-    return a
+    generateViewModel(StudentViewModel, student)
   }
 
   @Post()
   async create(@Body() body: StudentCreateRequest) {
-    return await this.studentService.create(body)
+    const student = await this.studentService.create(body)
+
+    return generateViewModel(StudentViewModel, student)
   }
 
   @Put(':id')
@@ -46,7 +50,7 @@ export class StudentController {
       isThrow: true,
     })
 
-    return student.update(body)
+    generateViewModel(StudentViewModel, await student.update(body))
   }
 
   @Delete(':id')

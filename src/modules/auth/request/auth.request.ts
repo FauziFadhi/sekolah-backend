@@ -7,5 +7,4 @@ export class AuthCreateRequest implements Pick<IUserLoginCreateAttr, "username" 
 
   @IsNotEmpty()
   password: string;
-
 }

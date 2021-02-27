@@ -1,5 +1,6 @@
 import { ERROR_CODE } from '@constants/error-code';
 import { UnprocessableEntityException } from '@nestjs/common';
+import { plainToClass } from 'class-transformer';
 import { DB } from 'database/config';
 import { isUndefined, omitBy, snakeCase } from 'lodash';
 import * as moment from 'moment';
@@ -67,3 +68,7 @@ export const queryPaginationSort = (querySort: string, callback?: (field: string
 export const circularToJSON = circular => JSON.parse(JSON.stringify(circular))
 
 export const omitUndefined = (obj: Object) => omitBy(obj, isUndefined)
+
+export const generateViewModel = <T, V>(cls: { new(...args: any[]): T }, obj: V | V[]): T | T[] => {
+  return plainToClass(cls, circularToJSON(obj), { excludeExtraneousValues: true })
+}

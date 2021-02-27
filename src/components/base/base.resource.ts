@@ -10,12 +10,6 @@ export class BaseResource {
 
     this.serializer.register('student', {
       id: 'id',
-      whitelist: ['id', 'name'],
-
-
-      relationships: {
-
-      },
     })
 
     return this.serializer.serialize(resource, data)
