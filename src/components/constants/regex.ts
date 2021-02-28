@@ -1,0 +1,1 @@
+export const REGEX_YEAR = /^[0-9]{4,4}$/
