@@ -5,6 +5,9 @@ import { BaseQuery } from 'components/base/base.query';
 export class MajorCreateRequest implements IMajorCreateAttr {
   @IsNotEmpty()
   name: string;
+
+  @IsNotEmpty()
+  code: string;
 }
 
 export class MajorUpdateRequest extends MajorCreateRequest {

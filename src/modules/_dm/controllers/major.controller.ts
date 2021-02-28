@@ -27,6 +27,7 @@ export class MajorController {
   async create(@Body() body: MajorCreateRequest) {
     const major = await DmMajor.create({
       name: body.name,
+      code: body.code,
     })
 
     return generateViewModel(MajorViewModel, major) as MajorViewModel

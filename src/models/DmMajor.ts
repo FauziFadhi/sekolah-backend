@@ -7,6 +7,7 @@ import { BeforeCreate, BeforeUpdate, Column, Table } from 'sequelize-typescript'
 export interface IMajorAttr extends IUnfilledAtt {
   id?: number
   name: string
+  code: string
 }
 export interface IMajorCreateAttr extends Omit<IMajorAttr, 'id' | TUnfilledAtt> {
 }
@@ -22,6 +23,9 @@ export class DmMajor extends baseModel<IMajorAttr, IMajorCreateAttr>() implement
 
   @Column({ allowNull: false })
   name: string
+
+  @Column({ allowNull: false })
+  code: string
 
   @Column({ defaultValue: 0 })
   isDeleted: boolean
@@ -55,7 +59,41 @@ export class DmMajor extends baseModel<IMajorAttr, IMajorCreateAttr>() implement
         },
       })
 
-    if (isExistsEmail) throw new BadRequestException('email has been used', ERROR_CODE.VALIDATION)
+    if (isExistsEmail) throw new BadRequestException('name has been used', ERROR_CODE.VALIDATION)
+
+    return model
+  }
+
+  /**
+   * hook for checking duplicate name and throw it immediately before create and update to database
+   * @param model {DmMajor}
+   * @param options {CreateOptions}
+   */
+  @BeforeCreate
+  @BeforeUpdate
+  static async checkDuplicateCode(model: DmMajor, options) {
+    let isExistsEmail: DmMajor = undefined
+    if (model.id)
+      isExistsEmail = await this.find({
+        lock: options?.transaction?.LOCK.SHARE,
+        where: {
+          isDeleted: false,
+          code: model.code,
+          id: {
+            ne: model.id,
+          },
+        },
+      })
+    else
+      isExistsEmail = await DmMajor.find({
+        lock: options?.transaction?.LOCK.SHARE,
+        where: {
+          isDeleted: false,
+          code: model.code,
+        },
+      })
+
+    if (isExistsEmail) throw new BadRequestException('code has been used', ERROR_CODE.VALIDATION)
 
     return model
   }
