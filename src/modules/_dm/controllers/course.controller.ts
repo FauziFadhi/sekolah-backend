@@ -1,3 +1,4 @@
+import { CourseService } from '@dm/bll/course.service';
 import { DmCourse } from '@models/DmCourse';
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UseInterceptors } from '@nestjs/common';
 import { generateViewModel } from '@utils/helpers';
@@ -11,6 +12,11 @@ import { CourseViewModel } from '../viewmodel/course.viewmodel';
 
 @Controller('v1/course')
 export class CourseController {
+  constructor(
+    private courseService: CourseService,
+  ) {
+
+  }
 
   @Get()
   @UseInterceptors(new ResponsePaginationInterceptor(BaseResource, 'course'))
@@ -54,10 +60,6 @@ export class CourseController {
   @Delete(':id')
   @HttpCode(204)
   async delete(@Param('id') id: number) {
-    const course = await DmCourse.findById(id, {
-      isThrow: true
-    })
-
-    await course.update({ isDeleted: true })
+    await this.courseService.delete(id)
   }
 }

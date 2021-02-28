@@ -15,6 +15,7 @@ export interface IMajorCreateAttr extends Omit<IMajorAttr, 'id' | TUnfilledAtt> 
   tableName: 'dm_major',
   indexes: [
     { fields: ['is_deleted', 'name'] },
+    { fields: ['is_deleted', 'id'] },
   ],
 })
 export class DmMajor extends baseModel<IMajorAttr, IMajorCreateAttr>() implements IMajorAttr {

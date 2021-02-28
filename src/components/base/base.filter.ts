@@ -1,15 +1,18 @@
 import { queryPaginationSort } from '@utils/helpers';
-import { Includeable, Order, WhereOptions } from 'sequelize/types';
+import { FindAttributeOptions, Includeable, Order, WhereOptions } from 'sequelize/types';
 
 export class BaseFilter {
   where?: WhereOptions
-  include?: Includeable | Includeable[]
+  include?: Includeable[] = []
   order?: Order
   offset?: number
+  attributes?: FindAttributeOptions;
   limit?: number
+  subQuery?: boolean
   query: any
 
   constructor(query: any) {
+    this.subQuery = false
 
     this.query = query
     this.offset = (query.size * query.page) - +query.size || undefined

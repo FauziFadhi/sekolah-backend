@@ -2,7 +2,10 @@ import { IUnfilledAtt, TUnfilledAtt } from '@constants/app';
 import { ERROR_CODE } from '@constants/error-code';
 import { BadRequestException } from '@nestjs/common';
 import { baseModel } from 'components/base/base.model';
-import { BeforeCreate, BeforeUpdate, Column, Table } from 'sequelize-typescript';
+import { BeforeCreate, BeforeUpdate, BelongsToMany, Column, Table } from 'sequelize-typescript';
+
+import { Teacher } from './Teacher';
+import { TeacherCourse } from './TeacherCourse';
 
 export interface ICourseAttr extends IUnfilledAtt {
   id?: number
@@ -15,6 +18,7 @@ export interface ICourseCreateAttr extends Omit<ICourseAttr, 'id' | TUnfilledAtt
   tableName: 'dm_course',
   indexes: [
     { fields: ['is_deleted', 'name'] },
+    { fields: ['is_deleted', 'id'] },
   ],
 })
 export class DmCourse extends baseModel<ICourseAttr, ICourseCreateAttr>() implements ICourseAttr {
@@ -25,6 +29,9 @@ export class DmCourse extends baseModel<ICourseAttr, ICourseCreateAttr>() implem
 
   @Column({ defaultValue: 0 })
   isDeleted: boolean
+
+  @BelongsToMany(() => Teacher, () => TeacherCourse)
+  teachers: Teacher
 
   /**
    * hook for checking duplicate name and throw it immediately before create and update to database
@@ -55,7 +62,7 @@ export class DmCourse extends baseModel<ICourseAttr, ICourseCreateAttr>() implem
         },
       })
 
-    if (isExistsEmail) throw new BadRequestException('email has been used', ERROR_CODE.VALIDATION)
+    if (isExistsEmail) throw new BadRequestException('name has been used', ERROR_CODE.VALIDATION)
 
     return model
   }

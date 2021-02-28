@@ -16,7 +16,10 @@
       "@constants/*": ["./components/constants/*"],
       "@decorators/*": ["./components/decorators/*"],
       "@utils/*": ["./components/utils/*"],
-      "@auth/*": ["./modules/auth/*"]
+      "@auth/*": ["./modules/auth/*"],
+      "@dm/*": ["./modules/_dm/*"],
+      "@teacher/*": ["./modules/teacher/*"],
+      "@student/*": ["./modules/student/*"]
     }
   }
 }

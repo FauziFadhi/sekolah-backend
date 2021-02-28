@@ -1,5 +1,6 @@
 import { UserRole } from '@constants/app';
 import { ITeacherCreateAttr, Teacher } from '@models/Teacher';
+import { TeacherCourse } from '@models/TeacherCourse';
 import { IUserLoginCreateAttr, UserLogin } from '@models/UserLogin';
 import { Injectable } from '@nestjs/common';
 import { DB } from 'database/config';
@@ -7,6 +8,11 @@ import { Transaction } from 'sequelize/types';
 
 @Injectable()
 export class TeacherService {
+
+  constructor(
+  ) {
+
+  }
 
   /**
    * create stundent data and account
@@ -35,14 +41,23 @@ export class TeacherService {
    * delete student and its account
    */
   async delete(id: number, transaction1?: Transaction) {
-    const student = await Teacher.findById(id, { isThrow: true, where: { isDeleted: false } })
+    const teacher = await Teacher.findById(id, { isThrow: true, where: { isDeleted: false } })
 
     return await DB.transaction(async (transaction2) => {
       const transaction = transaction1 || transaction2
 
-      await student.update({ isDeleted: true }, { transaction })
+      await Promise.all([
+        /* delete teacher */
+        teacher.update({ isDeleted: true }, { transaction }),
 
-      await UserLogin.update({ isDeleted: true }, { where: { id: student.userLoginId }, transaction })
+        /* delete teacher course */
+        TeacherCourse.destroy({ where: { teacherId: teacher.id }, transaction }),
+
+        /* delete teacher teacher account */
+        UserLogin.update({ isDeleted: true }, { where: { id: teacher.userLoginId }, transaction }),
+      ])
+
+
     })
   }
 }

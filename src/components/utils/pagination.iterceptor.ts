@@ -2,6 +2,7 @@ import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nes
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { Resource } from '../base/base.resource';
 import { circularToJSON } from './helpers';
 
 type Meta = {
@@ -41,7 +42,7 @@ export class ResponsePaginationInterceptor<T> implements NestInterceptor<T, any>
 
   constructor(
     resource,
-    serializeName: string,
+    serializeName: Resource,
   ) {
     this.resource = resource
     this.serializeName = serializeName
@@ -107,6 +108,8 @@ export class ResponsePaginationInterceptor<T> implements NestInterceptor<T, any>
   private linkQueries(itsPage: number): string {
     const updatedQuery = this.queryString.replace(`page=${this.query.page}`, `page=${(itsPage)}`)
 
+    if (!updatedQuery)
+      return this.pathname
     return `${this.pathname}?${updatedQuery}`
   }
 
@@ -120,7 +123,7 @@ export class ResponsePaginationInterceptor<T> implements NestInterceptor<T, any>
     // META
     const total: number = count.length || count
 
-    const totalPage = Math.ceil(total / (+this.query.size || 0))
+    const totalPage = Math.ceil(total / (+this.query.size || undefined))
 
     return total >= 0 && {
       total,

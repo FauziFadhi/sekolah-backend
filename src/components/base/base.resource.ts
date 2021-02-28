@@ -1,7 +1,7 @@
 
 const JSONAPISerializer = require('json-api-serializer');
 
-type Resource = 'student'
+export type Resource = 'student' | 'teacher' | 'course' | 'major'
 
 export class BaseResource {
   protected serializer = new JSONAPISerializer()

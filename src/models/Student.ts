@@ -27,6 +27,7 @@ export interface IStudentCreateAttr extends Omit<IStudentAttr, 'id' | TUnfilledA
     { fields: ['is_deleted', 'name'] },
     { fields: ['is_deleted', 'email'] },
     { fields: ['is_deleted', 'nisn'] },
+    { fields: ['is_deleted', 'id'] },
   ],
 })
 export class Student extends baseModel<IStudentAttr, IStudentCreateAttr>() implements IStudentAttr {

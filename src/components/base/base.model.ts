@@ -33,7 +33,7 @@ export function baseModel<T1, T2>() {
       const isDataExist = data
       const isDataDeleted = data && Boolean(data.isDeleted == true)
 
-      if ((!isDataExist || isDataDeleted) && isThrow) throw new NotFoundException()
+      if ((!isDataExist || isDataDeleted) && isThrow) throw new NotFoundException(this.name)
     }
 
     static async findById<T extends Model>(this: { new(): T } & typeof BaseModel, id: number, options?: FindOptions & { isThrow?: boolean }): Promise<T> {
