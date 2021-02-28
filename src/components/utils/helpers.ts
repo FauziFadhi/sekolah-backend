@@ -70,5 +70,8 @@ export const circularToJSON = circular => JSON.parse(JSON.stringify(circular))
 export const omitUndefined = (obj: Object) => omitBy(obj, isUndefined)
 
 export const generateViewModel = <T, V>(cls: { new(...args: any[]): T }, obj: V | V[]): T | T[] => {
-  return plainToClass(cls, circularToJSON(obj), { excludeExtraneousValues: true })
+  const result = plainToClass(cls, circularToJSON(obj), { excludeExtraneousValues: true }) as unknown
+  if (Array.isArray(obj))
+    return result as T[]
+  return result as T
 }

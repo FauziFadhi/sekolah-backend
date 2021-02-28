@@ -20,10 +20,15 @@ export function baseModel<T1, T2>() {
       return data as any
     }
 
-    invalidateCache(model: any): Promise<void> {
+    invalidateCache<T extends Model>(model: T): Promise<void> {
       throw new InternalServerErrorException(`method invalidateCache not implemented yet at Model`)
     }
 
+    /**
+     * throw data if data is null or data isDeleted is true
+     * @param data 
+     * @param isThrow 
+     */
     static throw(data: any, isThrow: boolean) {
       const isDataExist = data
       const isDataDeleted = data && Boolean(data.isDeleted == true)
@@ -92,4 +97,18 @@ export function getOptions(target: any): ModelOptions | undefined {
   if (options) {
     return { ...options };
   }
+}
+
+
+export function Cache(target: Object, key: string, descriptor: TypedPropertyDescriptor<any>) {
+  let originalMethod = descriptor.value
+  let result = null
+
+  target[`${key}Cache`] = function (...args: any[]) {
+    result = originalMethod.apply(target, args);
+
+    return result
+  }
+
+  return descriptor;
 }

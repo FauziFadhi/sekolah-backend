@@ -17,7 +17,6 @@ export interface IStudentAttr extends IUnfilledAtt {
   religion: RELIGION
   userLoginId: number
 }
-
 export interface IStudentCreateAttr extends Omit<IStudentAttr, 'id' | TUnfilledAtt> {
 }
 
@@ -68,10 +67,11 @@ export class Student extends baseModel<IStudentAttr, IStudentCreateAttr>() imple
       ...options,
       where: {
         userLoginId,
-        ...options.where,
+        ...options?.where,
       },
     })
   }
+  static async findByUserLoginCache(userLoginId: number, options?: FindOptions & { isThrow?: boolean }) { }
 
   /**
    * hook for checking duplicate email and throw it immediately before create and update to database

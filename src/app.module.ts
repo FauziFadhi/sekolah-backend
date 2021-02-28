@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { DmModule } from 'modules/_dm/_dm.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -14,7 +15,8 @@ import { TeacherModule } from './modules/teacher/teacher.module';
     }),
     AuthModule,
     StudentModule,
-    TeacherModule
+    TeacherModule,
+    DmModule,
   ],
   controllers: [AppController],
   providers: [AppService],

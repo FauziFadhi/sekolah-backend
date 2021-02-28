@@ -14,6 +14,12 @@ export class BaseResource {
     this.serializer.register('teacher', {
       id: 'id',
     })
+    this.serializer.register('course', {
+      id: 'id',
+    })
+    this.serializer.register('major', {
+      id: 'id',
+    })
 
     return this.serializer.serialize(resource, data)
   }

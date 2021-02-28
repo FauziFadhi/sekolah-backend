@@ -23,7 +23,6 @@ export class StudentController {
   @Get()
   @UseInterceptors(new ResponsePaginationInterceptor(BaseResource, 'student'))
   async list(@StudentListFilter() filter) {
-
     const { count, rows } = await Student.findAndCountAll(filter)
     return { count, rows: generateViewModel(StudentViewModel, rows) }
   }
