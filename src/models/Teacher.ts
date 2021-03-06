@@ -3,10 +3,7 @@ import { ENUM_GENDER, ENUM_PTK_TYPE, ENUM_RELIGION } from '@constants/enum';
 import { ERROR_CODE } from '@constants/error-code';
 import { BadRequestException } from '@nestjs/common';
 import { baseModel } from 'components/base/base.model';
-import { BeforeCreate, BeforeUpdate, BelongsToMany, Column, DataType, Table } from 'sequelize-typescript';
-
-import { DmCourse } from './DmCourse';
-import { TeacherCourse } from './TeacherCourse';
+import { BeforeCreate, BeforeUpdate, Column, DataType, Table } from 'sequelize-typescript';
 
 export interface ITeacherAttr extends IUnfilledAtt {
   id?: number
@@ -65,9 +62,6 @@ export class Teacher extends baseModel<ITeacherAttr, ITeacherCreateAttr>() imple
 
   @Column({ defaultValue: 0 })
   isDeleted: boolean
-
-  @BelongsToMany(() => DmCourse, () => TeacherCourse)
-  courses: DmCourse
 
   /**
    * hook for checking duplicate email and throw it immediately before create and update to database

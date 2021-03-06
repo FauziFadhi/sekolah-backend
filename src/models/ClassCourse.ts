@@ -19,10 +19,9 @@ export interface IClassCourseCreateAttr extends Omit<IClassCourseAttr, 'id' | TU
 }
 
 @Table({
-  tableName: 'teacher_course',
+  tableName: 'class_course',
   indexes: [
-    { fields: ['is_deleted', 'school_year', 'teacher_id'] },
-    { fields: ['is_deleted', 'school_year', 'course_id'] },
+    { fields: ['is_deleted', 'class_id', 'teacher_id', 'course_id'], unique: true },
   ]
 })
 

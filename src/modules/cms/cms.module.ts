@@ -12,5 +12,6 @@ import { TeacherModule } from './teacher/teacher.module';
     ClassesModule,
     DmModule,
   ],
+  exports: []
 })
 export class CmsModule { }

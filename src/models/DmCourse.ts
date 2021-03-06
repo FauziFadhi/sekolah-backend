@@ -2,10 +2,7 @@ import { IUnfilledAtt, TUnfilledAtt } from '@constants/app';
 import { ERROR_CODE } from '@constants/error-code';
 import { BadRequestException } from '@nestjs/common';
 import { baseModel } from 'components/base/base.model';
-import { BeforeCreate, BeforeUpdate, BelongsToMany, Column, Table } from 'sequelize-typescript';
-
-import { Teacher } from './Teacher';
-import { TeacherCourse } from './TeacherCourse';
+import { BeforeCreate, BeforeUpdate, Column, Table } from 'sequelize-typescript';
 
 export interface ICourseAttr extends IUnfilledAtt {
   id?: number
@@ -29,9 +26,6 @@ export class DmCourse extends baseModel<ICourseAttr, ICourseCreateAttr>() implem
 
   @Column({ defaultValue: 0 })
   isDeleted: boolean
-
-  @BelongsToMany(() => Teacher, () => TeacherCourse)
-  teachers: Teacher
 
   /**
    * hook for checking duplicate name and throw it immediately before create and update to database

@@ -1,5 +1,5 @@
 import { Classes } from '@models/Classes';
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { generateViewModel } from '@utils/helpers';
 
 import { ClassesService } from '../bll/classes.service';
@@ -23,5 +23,24 @@ export class ClassesController {
   @Post()
   async create(@Body() body: ClassesCreateRequest) {
     return await this.classesService.create(body)
+  }
+
+  @Get(':id')
+  async getOne(@Param('id') id: number) {
+    return await Classes.findById(id, {
+      isThrow: true,
+      attributes: ['name', 'grade', 'schoolYear'],
+      include: [
+        {
+          association: 'homeTeacher',
+          attributes: ['name']
+        },
+        {
+          association: 'major',
+          attributes: ['name']
+        }
+      ]
+
+    })
   }
 }

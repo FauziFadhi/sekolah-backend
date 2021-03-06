@@ -33,7 +33,7 @@ export class ClassesService {
 
       const classes = await Classes.create(classesDTO, { transaction })
 
-      if (studentIds.length)
+      if (studentIds?.length)
         await this.classStudentService.create({
           classId: classes.id,
           studentIds,
@@ -57,4 +57,4 @@ export class ClassesService {
       ClassesStudent.update({ isDeleted: true }, { transaction, where: { isDeleted: false, classId: classes.id } })
     ])
   }
-} 
+}
