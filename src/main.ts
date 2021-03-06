@@ -11,6 +11,7 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
   install();
+  // DB.sync({ alter: true })
 
   // const app = await NestFactory.create<NestExpressApplication>(AppModule);
 

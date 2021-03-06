@@ -1,6 +1,8 @@
 import { IUnfilledAtt, TUnfilledAtt } from '@constants/app';
+import { ERROR_CODE } from '@constants/error-code';
+import { BadRequestException } from '@nestjs/common';
 import { baseModel, CrUpIs } from 'components/base/base.model';
-import { BelongsTo, Column, ForeignKey, Table } from 'sequelize-typescript';
+import { BeforeCreate, BelongsTo, Column, ForeignKey, Table } from 'sequelize-typescript';
 
 import { DmMajor } from './DmMajor';
 import { Teacher } from './Teacher';
@@ -53,35 +55,35 @@ export class Classes extends baseModel<IClassesAttr, IClassesCreateAttr>() imple
   @Column({ defaultValue: 0 })
   isDeleted: boolean
 
-  // @BeforeCreate
-  // static async duplicateCass(model: Classes, options) {
-  //   const existsClass = await Classes.find({
-  //     where: {
-  //       isDeleted: false,
-  //       grade: model.grade,
-  //       majorId: model.majorId,
-  //       schoolYear: model.schoolYear
-  //     }
-  //   })
+  @BeforeCreate
+  static async duplicateCass(model: Classes, options) {
+    const existsClass = await Classes.find({
+      where: {
+        isDeleted: false,
+        grade: model.grade,
+        majorId: model.majorId,
+        schoolYear: model.schoolYear
+      }
+    })
 
-  //   if (existsClass) throw new BadRequestException('class already exists', ERROR_CODE.VALIDATION)
+    if (existsClass) throw new BadRequestException('class already exists', ERROR_CODE.VALIDATION)
 
-  //   return model
-  // }
+    return model
+  }
 
-  // @BeforeCreate
-  // static async duplicateHomeTeacher(model: Classes, options) {
-  //   const existsClass = await Classes.find({
-  //     where: {
-  //       isDeleted: false,
-  //       homeTeacherId: model.homeTeacherId,
-  //       schoolYear: model.schoolYear
-  //     }
-  //   })
+  @BeforeCreate
+  static async duplicateHomeTeacher(model: Classes, options) {
+    const existsClass = await Classes.find({
+      where: {
+        isDeleted: false,
+        homeTeacherId: model.homeTeacherId,
+        schoolYear: model.schoolYear
+      }
+    })
 
-  //   if (existsClass) throw new BadRequestException('This teacher already become home teacher', ERROR_CODE.VALIDATION)
+    if (existsClass) throw new BadRequestException('This teacher already become home teacher', ERROR_CODE.VALIDATION)
 
-  //   return model
-  // }
+    return model
+  }
 
 }

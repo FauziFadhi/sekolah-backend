@@ -15,14 +15,14 @@ export interface IStudentAbsenceAttr extends IUnfilledAtt {
   id?: number
   classId: number
   studentId: number
-  absence: IAbsence
+  absences: IAbsence[]
 }
 
 export interface IStudentAbsenceCreateAttr extends Omit<IStudentAbsenceAttr, 'id' | TUnfilledAtt> {
 }
 
 @Table({
-  tableName: 'teacher_course',
+  tableName: 'student_absence',
   indexes: [
     { fields: ['is_deleted', 'class_id', 'student_id'] },
     { fields: ['is_deleted', 'student_id'] },
@@ -44,8 +44,8 @@ export class StudentAbsence extends baseModel<IStudentAbsenceAttr, IStudentAbsen
   @ForeignKey(() => Student)
   studentId: number
 
-  @Column(DataType.JSON)
-  absence: IAbsence;
+  @Column(DataType.JSONB)
+  absences: IAbsence[];
 
   @Column({ defaultValue: 0 })
   isDeleted: boolean

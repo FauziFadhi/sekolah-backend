@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { CmsModule } from './modules/cms/cms.module';
+import { BackofficeModule } from './modules/backoffice/backoffice.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { CmsModule } from './modules/cms/cms.module';
     }),
     AuthModule,
     CmsModule,
+    BackofficeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

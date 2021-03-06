@@ -11,7 +11,22 @@ export class ClassesStudentService {
     return await ClassesStudent.create(dto, { transaction })
   }
 
+  async addStudent(dto: ClassStudentCreateDTO, transaction?: Transaction) {
+    const classStudent = await ClassesStudent.find({ where: { isDeleted: false, classId: dto.classId } })
+    if (!classStudent)
+      return await ClassesStudent.create(dto, { transaction })
+    const studentIds = [...new Set([...dto.studentIds, classStudent.studentIds])]
+    return await classStudent.update({ studentIds }, { transaction })
+  }
+
   async update(dto: ClassStudentUpdateDTO, transaction?: Transaction) {
     return await ClassesStudent.update({ studentIds: dto.studentIds }, { transaction, where: { isDeleted: false, classId: dto.classId } })
+  }
+
+  async getClassStudent(classId: number) {
+    return await ClassesStudent.find({
+      where: { classId },
+      attributes: ['studentIds']
+    })
   }
 }
