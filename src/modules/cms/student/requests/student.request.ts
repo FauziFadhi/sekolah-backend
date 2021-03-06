@@ -1,5 +1,5 @@
 import { AuthCreateRequest } from '@auth/request/auth.request';
-import { GENDER, RELIGION } from '@constants/app';
+import { ENUM_GENDER, ENUM_RELIGION } from '@constants/enum';
 import { Type } from 'class-transformer';
 import { IsEmail, IsEnum, IsNotEmpty, IsNumberString, ValidateNested } from 'class-validator';
 
@@ -14,8 +14,8 @@ export class StudentCreateRequest implements StudentCreateDTO {
   nipd: string;
 
   @IsNotEmpty()
-  @IsEnum(GENDER)
-  gender: GENDER;
+  @IsEnum(ENUM_GENDER)
+  gender: ENUM_GENDER;
 
   @IsNotEmpty()
   @IsEmail()
@@ -32,8 +32,8 @@ export class StudentCreateRequest implements StudentCreateDTO {
   birthDate: Date;
 
   @IsNotEmpty()
-  @IsEnum(RELIGION)
-  religion: RELIGION;
+  @IsEnum(ENUM_RELIGION)
+  religion: ENUM_RELIGION;
 
   @IsNotEmpty()
   @ValidateNested({ each: true })

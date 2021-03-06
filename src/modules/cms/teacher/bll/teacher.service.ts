@@ -1,4 +1,4 @@
-import { UserRole } from '@constants/app';
+import { ENUM_UserRole } from '@constants/enum';
 import { ITeacherCreateAttr, Teacher } from '@models/Teacher';
 import { TeacherCourse } from '@models/TeacherCourse';
 import { IUserLoginCreateAttr, UserLogin } from '@models/UserLogin';
@@ -27,7 +27,7 @@ export class TeacherService {
       const transaction = transaction1 || transaction2
 
       const userLogin = await UserLogin.create({
-        role: UserRole.GURU,
+        role: ENUM_UserRole.GURU,
         ...accountDTO,
       }, { transaction })
 

@@ -1,4 +1,4 @@
-import { UserRole } from '@constants/app';
+import { ENUM_UserRole } from '@constants/enum';
 import { ERROR_CODE } from '@constants/error-code';
 import { UserLogin } from '@models/UserLogin';
 import { UnauthorizedException } from '@nestjs/common';
@@ -7,11 +7,11 @@ type className = 'Student' | 'Teacher' | 'Bendahara'
 
 export * from './student.payload'
 
-export function construct(role: UserRole, loginData: UserLogin) {
+export function construct(role: ENUM_UserRole, loginData: UserLogin) {
   let className: className = null
   console.log(role);
   switch (role) {
-    case UserRole.SISWA:
+    case ENUM_UserRole.SISWA:
       className = 'Student'
       break;
     // case UserRole.GURU:

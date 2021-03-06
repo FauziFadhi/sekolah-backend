@@ -1,7 +1,7 @@
+import { ENUM_GENDER } from '@constants/enum';
 import { Migration } from 'database/config';
 import { DataTypes } from 'sequelize';
 
-import { GENDER } from '../../components/constants/app';
 
 export const up: Migration = async ({
   context: queryInterface
@@ -10,7 +10,7 @@ export const up: Migration = async ({
   await queryInterface.createTable('student', {
     name: DataTypes.STRING,
     nipd: DataTypes.STRING,
-    gender: DataTypes.ENUM({ values: Object.values(GENDER) }),
+    gender: DataTypes.ENUM({ values: Object.values(ENUM_GENDER) }),
   })
 
 };

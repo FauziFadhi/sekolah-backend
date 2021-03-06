@@ -1,4 +1,4 @@
-import { UserRole } from '@constants/app';
+import { ENUM_UserRole } from '@constants/enum';
 import { IStudentCreateAttr, Student } from '@models/Student';
 import { IUserLoginCreateAttr, UserLogin } from '@models/UserLogin';
 import { Injectable } from '@nestjs/common';
@@ -21,7 +21,7 @@ export class StudentService {
       const transaction = transaction1 || transaction2
 
       const userLogin = await UserLogin.create({
-        role: UserRole.SISWA,
+        role: ENUM_UserRole.SISWA,
         ...accountDTO,
       }, { transaction })
 

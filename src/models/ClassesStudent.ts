@@ -27,7 +27,7 @@ export class ClassesStudent extends baseModel<IClassesStudentAttr, IClassesStude
   classId: number;
 
   @BelongsTo(() => Classes)
-  classes: Classes
+  class: Classes
 
   @Column(DataType.JSON)
   studentIds: number[];

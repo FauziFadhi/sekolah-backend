@@ -11,7 +11,7 @@ import { TeacherCreateRequest } from '../requests/teacher.request';
 import { TeacherViewModel } from '../viewmodel/teacher.viewmodel';
 
 // @UseGuards(AuthGuard('uauth'))
-@Controller('v1/teacher')
+@Controller('v1/cms/teacher')
 export class TeacherController {
   constructor(
     private readonly teacherService: TeacherService,

@@ -5,9 +5,7 @@ import { DmModule } from 'modules/_dm/_dm.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
-import { StudentModule } from './modules/student/student.module';
-import { TeacherModule } from './modules/teacher/teacher.module';
-import { ClassesModule } from './modules/classes/classes.module';
+import { CmsModule } from './modules/cms/cms.module';
 
 @Module({
   imports: [
@@ -15,10 +13,8 @@ import { ClassesModule } from './modules/classes/classes.module';
       isGlobal: true,
     }),
     AuthModule,
-    StudentModule,
-    TeacherModule,
     DmModule,
-    ClassesModule,
+    CmsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

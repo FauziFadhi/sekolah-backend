@@ -1,4 +1,5 @@
-import { GENDER, IUnfilledAtt, PTK_TYPE, RELIGION, TUnfilledAtt } from '@constants/app';
+import { IUnfilledAtt, TUnfilledAtt } from '@constants/app';
+import { ENUM_GENDER, ENUM_PTK_TYPE, ENUM_RELIGION } from '@constants/enum';
 import { ERROR_CODE } from '@constants/error-code';
 import { BadRequestException } from '@nestjs/common';
 import { baseModel } from 'components/base/base.model';
@@ -11,12 +12,12 @@ export interface ITeacherAttr extends IUnfilledAtt {
   id?: number
   name: string
   nuptk: string
-  gender: GENDER
+  gender: ENUM_GENDER
   birthPlace: string
   email: string
   birthDate: Date
-  ptkType: PTK_TYPE
-  religion: RELIGION
+  ptkType: ENUM_PTK_TYPE
+  religion: ENUM_RELIGION
   userLoginId: number
 }
 
@@ -38,11 +39,11 @@ export class Teacher extends baseModel<ITeacherAttr, ITeacherCreateAttr>() imple
   @Column
   nipd: string;
 
-  @Column(DataType.ENUM({ values: Object.values(GENDER) }))
-  gender: GENDER;
+  @Column(DataType.ENUM({ values: Object.values(ENUM_GENDER) }))
+  gender: ENUM_GENDER;
 
   @Column
-  ptkType: PTK_TYPE;
+  ptkType: ENUM_PTK_TYPE;
 
   @Column
   email: string;
@@ -56,8 +57,8 @@ export class Teacher extends baseModel<ITeacherAttr, ITeacherCreateAttr>() imple
   @Column
   birthDate: Date;
 
-  @Column(DataType.ENUM({ values: Object.values(RELIGION) }))
-  religion: RELIGION;
+  @Column(DataType.ENUM({ values: Object.values(ENUM_RELIGION) }))
+  religion: ENUM_RELIGION;
 
   @Column
   userLoginId: number;

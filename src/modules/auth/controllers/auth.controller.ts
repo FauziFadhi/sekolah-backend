@@ -3,7 +3,6 @@ import * as PayloadConstruct from '@auth/payload/payload.base';
 import { ERROR_MSG } from '@constants/error-message';
 import { UserLogin } from '@models/UserLogin';
 import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
-import { LoginRequest } from 'http/request/auth.request';
 
 @Controller('v1/auth')
 export class AuthController {
@@ -14,7 +13,7 @@ export class AuthController {
   }
 
   @Post('login')
-  async login(@Body() body: LoginRequest) {
+  async login(@Body() body: any) {
 
     const userLogin = await UserLogin.findOne({
       where: {

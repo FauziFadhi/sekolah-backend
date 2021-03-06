@@ -2,7 +2,7 @@ import { DmCourse } from '@models/DmCourse';
 import { TeacherCourse } from '@models/TeacherCourse';
 import { Injectable } from '@nestjs/common';
 import { DB } from 'database/config';
-import { TeacherCourseService } from 'modules/teacher/bll/teacher-couse.service';
+import { TeacherCourseService } from 'modules/cms/teacher/bll/teacher-couse.service';
 import { Transaction } from 'sequelize/types';
 
 @Injectable()

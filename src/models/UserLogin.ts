@@ -1,4 +1,5 @@
-import { IUnfilledAtt, TUnfilledAtt, UserRole } from '@constants/app';
+import { IUnfilledAtt, TUnfilledAtt } from '@constants/app';
+import { ENUM_UserRole } from '@constants/enum';
 import { ERROR_CODE } from '@constants/error-code';
 import { BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
@@ -10,7 +11,7 @@ export interface IUserLoginAttr extends IUnfilledAtt {
   id?: number
   username: string
   password: string
-  role: UserRole
+  role: ENUM_UserRole
 }
 
 export interface IUserLoginCreateAttr extends Omit<IUserLoginAttr, 'id' | TUnfilledAtt> {
@@ -31,8 +32,8 @@ export class UserLogin extends baseModel<IUserLoginAttr, IUserLoginCreateAttr>()
   @Column
   password: string;
 
-  @Column(DataType.ENUM({ values: Object.values(UserRole) }))
-  role: UserRole
+  @Column(DataType.ENUM({ values: Object.values(ENUM_UserRole) }))
+  role: ENUM_UserRole
 
   @Column({ defaultValue: 0 })
   isDeleted: boolean

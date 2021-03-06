@@ -2,17 +2,17 @@ import { CourseViewModel } from '@dm/viewmodel/course.viewmodel';
 import { DmCourse } from '@models/DmCourse';
 import { TeacherCourse } from '@models/TeacherCourse';
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, UseInterceptors } from '@nestjs/common';
-import { TeacherWithCourseViewModel } from '@teacher/viewmodel/teacher.viewmodel';
 import { generateViewModel } from '@utils/helpers';
 import { ResponsePaginationInterceptor } from '@utils/pagination.iterceptor';
 import { BaseResource } from 'components/base/base.resource';
+import { TeacherWithCourseViewModel } from 'modules/cms/teacher/viewmodel/teacher.viewmodel';
 
 import { TeacherCourseService } from '../bll/teacher-couse.service';
 import { TeacherCourseListFilter } from '../filters/teacher-course-list.filter';
 import { TeacherCourseCreateRequest } from '../requests/teacher-course.request';
 
 // @UseGuards(AuthGuard('uauth'))
-@Controller('v1/teacher/:teacherId/course')
+@Controller('v1/cms/teacher/:teacherId/course')
 export class TeacherCourseController {
   constructor(
     private readonly teacherCourseService: TeacherCourseService,

@@ -1,9 +1,9 @@
 import { AuthCreateRequest } from '@auth/request/auth.request';
-import { GENDER, PTK_TYPE, RELIGION } from '@constants/app';
+import { ENUM_GENDER, ENUM_PTK_TYPE, ENUM_RELIGION } from '@constants/enum';
 import { Type } from 'class-transformer';
 import { IsEmail, IsEnum, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
 
-import { TeacherCreateDTO } from '../dto/student.dto';
+import { TeacherCreateDTO } from '../dto/teacher.dto';
 
 export class TeacherCreateRequest implements TeacherCreateDTO {
   @IsNotEmpty()
@@ -15,8 +15,8 @@ export class TeacherCreateRequest implements TeacherCreateDTO {
   nuptk: string;
 
   @IsNotEmpty()
-  @IsEnum(GENDER)
-  gender: GENDER;
+  @IsEnum(ENUM_GENDER)
+  gender: ENUM_GENDER;
 
   @IsNotEmpty()
   @IsString()
@@ -31,12 +31,12 @@ export class TeacherCreateRequest implements TeacherCreateDTO {
   birthDate: Date;
 
   @IsNotEmpty()
-  @IsEnum(PTK_TYPE)
-  ptkType: PTK_TYPE;
+  @IsEnum(ENUM_PTK_TYPE)
+  ptkType: ENUM_PTK_TYPE;
 
   @IsNotEmpty()
-  @IsEnum(RELIGION)
-  religion: RELIGION;
+  @IsEnum(ENUM_RELIGION)
+  religion: ENUM_RELIGION;
 
   @IsNotEmpty()
   @ValidateNested({ each: true })
