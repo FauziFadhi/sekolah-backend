@@ -1,16 +1,16 @@
-import { CourseService } from '@dm/bll/course.service';
 import { DmCourse } from '@models/DmCourse';
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UseInterceptors } from '@nestjs/common';
 import { generateViewModel } from '@utils/helpers';
 import { ResponsePaginationInterceptor } from '@utils/pagination.iterceptor';
 import { BaseResource } from 'components/base/base.resource';
+import { CourseService } from 'modules/cms/_dm/bll/course.service';
 import { FindOptions } from 'sequelize/types';
 
 import { CourseListFilter } from '../filters/course-list.filter';
 import { CourseCreateRequest, CourseUpdateRequest } from '../requests/course.request';
 import { CourseViewModel } from '../viewmodel/course.viewmodel';
 
-@Controller('v1/course')
+@Controller('v1/cms/course')
 export class CourseController {
   constructor(
     private courseService: CourseService,

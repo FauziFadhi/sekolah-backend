@@ -5,7 +5,7 @@ import { generateViewModel } from '@utils/helpers';
 import { ClassesService } from '../bll/classes.service';
 import { ClassesCreateRequest } from '../requests/classes.request';
 
-@Controller('v1/classes')
+@Controller('v1/cms/classes')
 export class ClassesController {
   constructor(
     private readonly classesService: ClassesService,

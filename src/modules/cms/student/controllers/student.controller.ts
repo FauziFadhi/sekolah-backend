@@ -11,7 +11,7 @@ import { StudentCreateRequest } from '../requests/student.request';
 import { StudentViewModel } from '../viewmodel/student.viewmodel';
 
 // @UseGuards(AuthGuard('uauth'))
-@Controller('v1/student')
+@Controller('v1/cms/student')
 export class StudentController {
 
   constructor(

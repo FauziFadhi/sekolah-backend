@@ -3,7 +3,7 @@ import { TUnfilledAtt } from '@constants/app';
 import { ENUM_GENDER, ENUM_PTK_TYPE, ENUM_RELIGION } from '@constants/enum';
 import { ITeacherAttr } from '@models/Teacher';
 import { Exclude, Expose, Type } from 'class-transformer';
-import { CourseViewModel } from 'modules/_dm/viewmodel/course.viewmodel';
+import { CourseViewModel } from 'modules/cms/_dm/viewmodel/course.viewmodel';
 
 export class TeacherViewModel implements Omit<ITeacherAttr, TUnfilledAtt> {
   @Expose() nuptk: string;

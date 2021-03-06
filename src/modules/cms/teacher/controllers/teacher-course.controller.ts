@@ -1,10 +1,10 @@
-import { CourseViewModel } from '@dm/viewmodel/course.viewmodel';
 import { DmCourse } from '@models/DmCourse';
 import { TeacherCourse } from '@models/TeacherCourse';
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, UseInterceptors } from '@nestjs/common';
 import { generateViewModel } from '@utils/helpers';
 import { ResponsePaginationInterceptor } from '@utils/pagination.iterceptor';
 import { BaseResource } from 'components/base/base.resource';
+import { CourseViewModel } from 'modules/cms/_dm/viewmodel/course.viewmodel';
 import { TeacherWithCourseViewModel } from 'modules/cms/teacher/viewmodel/teacher.viewmodel';
 
 import { TeacherCourseService } from '../bll/teacher-couse.service';

@@ -9,7 +9,7 @@ import { MajorListFilter } from '../filters/major-list.filter';
 import { MajorCreateRequest, MajorUpdateRequest } from '../requests/major.request';
 import { MajorViewModel } from '../viewmodel/major.viewmodel';
 
-@Controller('v1/major')
+@Controller('v1/cms/major')
 export class MajorController {
 
   @Get()
