@@ -3,8 +3,10 @@ import { ENUM_GENDER, ENUM_RELIGION } from '@constants/enum';
 import { ERROR_CODE } from '@constants/error-code';
 import { BadRequestException } from '@nestjs/common';
 import { baseModel } from 'components/base/base.model';
-import { BeforeCreate, BeforeUpdate, Column, DataType, Table } from 'sequelize-typescript';
+import { BeforeCreate, BeforeUpdate, Column, DataType, HasMany, Table } from 'sequelize-typescript';
 import { FindOptions } from 'sequelize/types';
+
+import { Score } from './Score';
 
 export interface IStudentAttr extends IUnfilledAtt {
   id?: number
@@ -63,6 +65,8 @@ export class Student extends baseModel<IStudentAttr, IStudentCreateAttr>() imple
   @Column({ defaultValue: 0 })
   isDeleted: boolean
 
+  @HasMany(() => Score)
+  scores: Score[]
 
   static async findByUserLogin(userLoginId: number, options?: FindOptions & { isThrow?: boolean }) {
     return await Student.find({

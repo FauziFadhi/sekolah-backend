@@ -1,5 +1,7 @@
 import { IUnfilledAtt, TUnfilledAtt } from '@constants/app';
-import { baseModel, CrUpIs } from 'components/base/base.model';
+import { ERROR_MSG } from '@constants/error-message';
+import { BadRequestException } from '@nestjs/common';
+import { baseFindOptions, baseModel, CrUpIs } from 'components/base/base.model';
 import { BelongsTo, Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
 
 import { Classes } from './Classes';
@@ -34,5 +36,15 @@ export class ClassesStudent extends baseModel<IClassesStudentAttr, IClassesStude
 
   @Column({ defaultValue: 0 })
   isDeleted: boolean
+
+  static async findStudentInClass({ classId, studentId }, options: baseFindOptions) {
+    const classStudent = await ClassesStudent.find({ ...options, where: { classId } })
+
+    const studentIdsOfClass = classStudent.studentIds
+    if (!studentIdsOfClass.some(id => id == studentId))
+      throw new BadRequestException(ERROR_MSG.NO_STUDENT_IN_CLASS)
+
+    return classStudent
+  }
 
 }

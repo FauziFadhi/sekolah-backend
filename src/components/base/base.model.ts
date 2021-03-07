@@ -8,11 +8,15 @@ export interface IBaseModel {
   invalidateCache(model: any): Promise<void>
 }
 
+export interface baseFindOptions extends FindOptions {
+  isThrow?: boolean
+}
+
 export function baseModel<T1, T2>() {
   return class BaseModel extends Model<T1, T2> implements IBaseModel {
 
 
-    static async find<T extends Model>(this: { new(): T } & typeof BaseModel, options?: FindOptions & { isThrow?: boolean }): Promise<T> {
+    static async find<T extends Model>(this: { new(): T } & typeof BaseModel, options?: baseFindOptions): Promise<T> {
       const data = await this.findOne(options)
 
       this.throw(data, options?.isThrow)
@@ -36,7 +40,7 @@ export function baseModel<T1, T2>() {
       if ((!isDataExist || isDataDeleted) && isThrow) throw new NotFoundException(this.name)
     }
 
-    static async findById<T extends Model>(this: { new(): T } & typeof BaseModel, id: number, options?: FindOptions & { isThrow?: boolean }): Promise<T> {
+    static async findById<T extends Model>(this: { new(): T } & typeof BaseModel, id: number, options?: baseFindOptions): Promise<T> {
       return await this.find({
         ...options,
         where: {
