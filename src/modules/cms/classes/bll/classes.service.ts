@@ -34,7 +34,7 @@ export class ClassesService {
       const classes = await Classes.create(classesDTO, { transaction })
 
       if (studentIds?.length)
-        await this.classStudentService.create({
+        await this.classStudentService.bulkCreate({
           classId: classes.id,
           studentIds,
         }, transaction)

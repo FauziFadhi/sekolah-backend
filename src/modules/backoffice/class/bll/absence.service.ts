@@ -1,9 +1,8 @@
-import { ERROR_MSG } from '@constants/error-message';
 import { Classes } from '@models/Classes';
 import { ClassesStudent } from '@models/ClassesStudent';
 import { Student } from '@models/Student';
 import { IAbsence, StudentAbsence } from '@models/StudentAbsence';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DB } from 'database/config';
 import { Transaction } from 'sequelize/types';
 
@@ -34,14 +33,10 @@ export class AbsenceService {
       const transaction = transaction1 || transaction2
       const [studentAbsence, classStudent] = await Promise.all([
         StudentAbsence.find({ where: { isDeleted: false, classId, studentId } }),
-        ClassesStudent.find({ isThrow: true, where: { classId } }),
+        ClassesStudent.findStudentInClass({ classId, studentId }, { isThrow: true }),
         Classes.findById(classId, { isThrow: true }),
         Student.findById(studentId, { isThrow: true }),
       ])
-
-      const studentIdsOfClass = classStudent.studentIds
-      if (!studentIdsOfClass.some(id => id == studentId))
-        throw new BadRequestException(ERROR_MSG.NO_STUDENT_IN_CLASS)
 
       if (!studentAbsence) {
         return await StudentAbsence.create({

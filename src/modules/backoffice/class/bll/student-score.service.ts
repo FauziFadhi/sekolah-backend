@@ -15,7 +15,6 @@ export class StudentScoreService {
   async list({ classId, studentId }) {
     return await Student.findById(studentId, {
       attributes: ['name', 'id'],
-      join
       include: [
         {
           association: 'scores',

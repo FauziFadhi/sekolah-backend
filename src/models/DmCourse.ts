@@ -27,6 +27,7 @@ export class DmCourse extends baseModel<ICourseAttr, ICourseCreateAttr>() implem
   @Column({ defaultValue: 0 })
   isDeleted: boolean
 
+
   /**
    * hook for checking duplicate name and throw it immediately before create and update to database
    * @param model {DmCourse}

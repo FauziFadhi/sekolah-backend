@@ -3,9 +3,11 @@ import { ENUM_GENDER, ENUM_RELIGION } from '@constants/enum';
 import { ERROR_CODE } from '@constants/error-code';
 import { BadRequestException } from '@nestjs/common';
 import { baseModel } from 'components/base/base.model';
-import { BeforeCreate, BeforeUpdate, Column, DataType, HasMany, Table } from 'sequelize-typescript';
+import { BeforeCreate, BeforeUpdate, BelongsToMany, Column, DataType, HasMany, Table } from 'sequelize-typescript';
 import { FindOptions } from 'sequelize/types';
 
+import { Classes } from './Classes';
+import { ClassesStudent } from './ClassesStudent';
 import { Score } from './Score';
 
 export interface IStudentAttr extends IUnfilledAtt {
@@ -67,6 +69,9 @@ export class Student extends baseModel<IStudentAttr, IStudentCreateAttr>() imple
 
   @HasMany(() => Score)
   scores: Score[]
+
+  @BelongsToMany(() => Classes, () => ClassesStudent)
+  classes: Classes[]
 
   static async findByUserLogin(userLoginId: number, options?: FindOptions & { isThrow?: boolean }) {
     return await Student.find({
